@@ -1,8 +1,6 @@
 package io.laymen.raw;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 
 public class FileHandler {
 
@@ -66,6 +64,45 @@ public class FileHandler {
         this.dbFile.write(description.getBytes());
 
         return true;
+    }
+
+    public Person readRow(int rowNumber) throws IOException {
+        byte[] row = this.readRowRecord(rowNumber);
+        Person person = new Person();
+        DataInputStream stream = new DataInputStream(new ByteArrayInputStream(row));
+
+        int nameLength = stream.readInt();
+        byte[] b = new byte[nameLength];
+        stream.read(b);
+        person.name = new String(b);
+
+        person.age = stream.readInt();
+
+        b = new byte[stream.readInt()];
+        stream.read(b);
+        person.address = new String(b);
+
+        b = new byte[stream.readInt()];
+        stream.read(b);
+        person.carPlateNumber = new String(b);
+
+        b = new byte[stream.readInt()];
+        stream.read(b);
+        person.description = new String(b);
+
+        return person;
+    }
+
+    private byte[] readRowRecord(int rowNumber) throws IOException {
+        this.dbFile.seek(0);
+        if (this.dbFile.readBoolean())
+            return new byte[0];
+        this.dbFile.seek(rowNumber + 1);
+        int recordLength = this.dbFile.readInt();
+        this.dbFile.seek(rowNumber + 5);
+        byte[] data = new byte[recordLength];
+        this.dbFile.read(data);
+        return data;
     }
 
     public void close() throws IOException {
