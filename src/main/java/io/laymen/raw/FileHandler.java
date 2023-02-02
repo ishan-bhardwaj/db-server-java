@@ -140,8 +140,8 @@ public class FileHandler {
             currentPos += recordLength;
         }
 
-        System.out.println("Total row number in the database is: " + rowNum);
-        System.out.println("Total deleted row number in the database is: " + deletedRows);
+        System.out.println("After startup: total row number in the database is: " + rowNum);
+        System.out.println("After startup: total deleted row number in the database is: " + deletedRows);
     }
 
     public void close() throws IOException {
