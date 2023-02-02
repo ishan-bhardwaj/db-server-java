@@ -120,6 +120,7 @@ public class FileHandler {
 
         long currentPos = 0;
         long rowNum = 0;
+        long deletedRows = 0;
 
         while (currentPos < this.dbFile.length()) {
             this.dbFile.seek(currentPos);
@@ -128,6 +129,8 @@ public class FileHandler {
             if (!isDeleted) {
                 Index.getInstance().add(currentPos);
                 rowNum++;
+            } else {
+                deletedRows++;
             }
 
             currentPos += 1;
@@ -138,6 +141,7 @@ public class FileHandler {
         }
 
         System.out.println("Total row number in the database is: " + rowNum);
+        System.out.println("Total deleted row number in the database is: " + deletedRows);
     }
 
     public void close() throws IOException {
